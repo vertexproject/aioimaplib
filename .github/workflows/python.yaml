@@ -21,11 +21,14 @@ jobs:
       # You can test your matrix by printing the current Python version
       - name: Display Python version
         run: python -c "import sys; print(sys.version)"
-#      - name: Test with pytest
-#        run: |
-#          python -m pytest
       - name: install dependencies
         run: pip install -r dev-requirements.txt
       - name: Test with nose2
         run: |
           nose2
+      - name: install pytest
+        run: |
+          pip install pytest
+      - name: Test with pytest
+        run: |
+          python -m pytest
