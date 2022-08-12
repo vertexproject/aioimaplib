@@ -19,9 +19,10 @@ import functools
 
 import time
 
+from unittest.mock import Mock
+
 from asynctest import TestCase
 from imaplib2 import imaplib2
-from mock import Mock
 from aioimaplib.tests import imapserver
 from aioimaplib.tests.imapserver import Mail
 from aioimaplib.tests.test_imapserver import WithImapServer

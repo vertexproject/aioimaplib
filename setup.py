@@ -18,7 +18,6 @@ NAME = 'aioimaplib'
 tests_require = [
     'nose2',
     'asynctest',
-    'mock',
     'pytz',
     'tzlocal',
     'imaplib2',

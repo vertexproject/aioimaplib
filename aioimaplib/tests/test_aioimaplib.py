@@ -20,9 +20,9 @@ import os
 import ssl
 import unittest
 from datetime import datetime, timedelta
+from unittest.mock import call, MagicMock
 
 import asynctest
-from mock import call, MagicMock
 from pytz import utc
 
 from aioimaplib import aioimaplib, CommandTimeout, extract_exists, \
