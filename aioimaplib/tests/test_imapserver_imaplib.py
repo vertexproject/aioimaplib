@@ -60,7 +60,7 @@ class TestImapServerWithImaplib(WithImapServer, TestCase):
 
         self.assertEqual('OK', result)
         self.assertEqual([b'LOGIN completed'], data)
-        self.assertEquals(imapserver.AUTH, self.imapserver.get_connection('user').state)
+        self.assertEqual(imapserver.AUTH, self.imapserver.get_connection('user').state)
 
     async def test_select_no_messages_in_mailbox(self):
         imap_client = await self.login_user('user@mail', 'pass')
@@ -70,7 +70,7 @@ class TestImapServerWithImaplib(WithImapServer, TestCase):
 
         self.assertEqual('OK', result)
         self.assertEqual([b'0'], data)
-        self.assertEquals(imapserver.SELECTED, self.imapserver.get_connection('user@mail').state)
+        self.assertEqual(imapserver.SELECTED, self.imapserver.get_connection('user@mail').state)
 
     async def test_select_one_message_in_mailbox(self):
         self.imapserver.receive(Mail.create(to=['user'], mail_from='me', subject='hello'))
@@ -97,10 +97,10 @@ class TestImapServerWithImaplib(WithImapServer, TestCase):
     async def test_examine_no_messages_in_mailbox(self):
         imap_client = await self.login_user('user', 'pass')
 
-        self.assertEquals(('OK', [b'0']), (await asyncio.wait_for(
+        self.assertEqual(('OK', [b'0']), (await asyncio.wait_for(
             self.loop.run_in_executor(None, functools.partial(imap_client.select, readonly=True)), 1)))
 
-        self.assertEquals(imapserver.AUTH, self.imapserver.get_connection('user').state)
+        self.assertEqual(imapserver.AUTH, self.imapserver.get_connection('user').state)
 
     async def test_search_by_uid_two_messages(self):
         self.imapserver.receive(Mail.create(['user']))
@@ -300,25 +300,25 @@ class TestImapServerWithImaplib(WithImapServer, TestCase):
 
         await asyncio.wait_for(self.loop.run_in_executor(None, imap_client.expunge), 1)
 
-        self.assertEquals(('OK', [b'0']), (await asyncio.wait_for(
+        self.assertEqual(('OK', [b'0']), (await asyncio.wait_for(
             self.loop.run_in_executor(None, functools.partial(imap_client.select)), 1)))
 
     async def test_noop(self):
         imap_client = await self.login_user('user', 'pass', select=True)
 
-        self.assertEquals(('OK', [b'NOOP completed.']),
+        self.assertEqual(('OK', [b'NOOP completed.']),
                           (await asyncio.wait_for(self.loop.run_in_executor(None, imap_client.noop), 1)))
 
     async def test_check(self):
         imap_client = await self.login_user('user', 'pass', select=True)
 
-        self.assertEquals(('OK', [b'CHECK completed.']),
+        self.assertEqual(('OK', [b'CHECK completed.']),
                           (await asyncio.wait_for(self.loop.run_in_executor(None, imap_client.check), 1)))
 
     async def test_status(self):
         imap_client = await self.login_user('user', 'pass')
 
-        self.assertEquals(('OK', [b'INBOX (MESSAGES 0 UIDNEXT 1)']),
+        self.assertEqual(('OK', [b'INBOX (MESSAGES 0 UIDNEXT 1)']),
                           (await asyncio.wait_for(
                               self.loop.run_in_executor(None, functools.partial(imap_client.status, 'INBOX',
                                                                                 '(MESSAGES UIDNEXT)')), 1)))
@@ -326,34 +326,34 @@ class TestImapServerWithImaplib(WithImapServer, TestCase):
     async def test_subscribe_unsubscribe_lsub(self):
         imap_client = await self.login_user('user', 'pass')
 
-        self.assertEquals(('OK', [b'SUBSCRIBE completed.']),
+        self.assertEqual(('OK', [b'SUBSCRIBE completed.']),
                           (await asyncio.wait_for(
                               self.loop.run_in_executor(None, functools.partial(
                                   imap_client.subscribe, '#fr.soc.feminisme')), 1)))
 
-        self.assertEquals(('OK', [b'() "." #fr.soc.feminisme']),
+        self.assertEqual(('OK', [b'() "." #fr.soc.feminisme']),
                           (await asyncio.wait_for(
                               self.loop.run_in_executor(None, functools.partial(
                                   imap_client.lsub, '#fr', 'soc.*')), 1)))
 
-        self.assertEquals(('OK', [b'UNSUBSCRIBE completed.']),
+        self.assertEqual(('OK', [b'UNSUBSCRIBE completed.']),
                           (await asyncio.wait_for(
                               self.loop.run_in_executor(None, functools.partial(
                                   imap_client.unsubscribe, '#fr.soc.feminisme')), 1)))
 
-        self.assertEquals(('OK', [None]),
+        self.assertEqual(('OK', [None]),
                           (await asyncio.wait_for(
                               self.loop.run_in_executor(None, functools.partial(
                                   imap_client.lsub, '#fr', '.*')), 1)))
 
     async def test_close(self):
         imap_client = await self.login_user('user', 'pass', select=True)
-        self.assertEquals(imapserver.SELECTED, self.imapserver.get_connection('user').state)
+        self.assertEqual(imapserver.SELECTED, self.imapserver.get_connection('user').state)
 
-        self.assertEquals(('OK', [b'CLOSE completed.']),
+        self.assertEqual(('OK', [b'CLOSE completed.']),
                           (await asyncio.wait_for(self.loop.run_in_executor(None, imap_client.close), 1)))
 
-        self.assertEquals(imapserver.AUTH, self.imapserver.get_connection('user').state)
+        self.assertEqual(imapserver.AUTH, self.imapserver.get_connection('user').state)
 
     async def test_copy_messages(self):
         self.imapserver.receive(Mail.create(['user']))
@@ -364,29 +364,29 @@ class TestImapServerWithImaplib(WithImapServer, TestCase):
             self.loop.run_in_executor(None, functools.partial(imap_client.copy, '1 2', 'MAILBOX')), 20)
         self.assertEqual('OK', result)
 
-        self.assertEquals(('OK', [b'2']), (await asyncio.wait_for(
+        self.assertEqual(('OK', [b'2']), (await asyncio.wait_for(
             self.loop.run_in_executor(None, functools.partial(imap_client.select, 'MAILBOX')), 20)))
 
     async def test_create_delete_mailbox(self):
         imap_client = await self.login_user('user', 'pass')
 
-        self.assertEquals(('NO', [b'STATUS completed.']),
+        self.assertEqual(('NO', [b'STATUS completed.']),
                           (await asyncio.wait_for(
                               self.loop.run_in_executor(None, functools.partial(imap_client.status, 'MBOX', '(MESSAGES)')), 1)))
 
-        self.assertEquals(('OK', [b'CREATE completed.']),
+        self.assertEqual(('OK', [b'CREATE completed.']),
                           (await asyncio.wait_for(
                               self.loop.run_in_executor(None, functools.partial(imap_client.create, 'MBOX')), 1)))
 
-        self.assertEquals(('OK', [b'MBOX (MESSAGES 0)']),
+        self.assertEqual(('OK', [b'MBOX (MESSAGES 0)']),
                           (await asyncio.wait_for(
                               self.loop.run_in_executor(None, functools.partial(imap_client.status, 'MBOX', '(MESSAGES)')), 1)))
 
-        self.assertEquals(('OK', [b'DELETE completed.']),
+        self.assertEqual(('OK', [b'DELETE completed.']),
                           (await asyncio.wait_for(
                               self.loop.run_in_executor(None, functools.partial(imap_client.delete, 'MBOX')), 1)))
 
-        self.assertEquals(('NO', [b'STATUS completed.']),
+        self.assertEqual(('NO', [b'STATUS completed.']),
                           (await asyncio.wait_for(
                               self.loop.run_in_executor(None, functools.partial(imap_client.status, 'MBOX', '(MESSAGES)')), 1)))
 
@@ -394,36 +394,36 @@ class TestImapServerWithImaplib(WithImapServer, TestCase):
         self.imapserver.receive(Mail.create(['user']))
         imap_client = await self.login_user('user', 'pass')
 
-        self.assertEquals(('NO', [b'STATUS completed.']),
+        self.assertEqual(('NO', [b'STATUS completed.']),
                           (await asyncio.wait_for(
                               self.loop.run_in_executor(None, functools.partial(imap_client.status, 'MBOX', '(MESSAGES)')), 1)))
 
-        self.assertEquals(('OK', [b'RENAME completed.']),
+        self.assertEqual(('OK', [b'RENAME completed.']),
                           (await asyncio.wait_for(
                               self.loop.run_in_executor(None, functools.partial(imap_client.rename, 'INBOX', 'MBOX')), 1)))
 
-        self.assertEquals(('OK', [b'MBOX (MESSAGES 1)']),
+        self.assertEqual(('OK', [b'MBOX (MESSAGES 1)']),
                           (await asyncio.wait_for(
                               self.loop.run_in_executor(None, functools.partial(imap_client.status, 'MBOX', '(MESSAGES)')), 1)))
 
     async def test_list(self):
         imap_client = await self.login_user('user', 'pass')
-        self.assertEquals(('OK', [b'() "/" Drafts', b'() "/" INBOX', b'() "/" Sent', b'() "/" Trash']),
+        self.assertEqual(('OK', [b'() "/" Drafts', b'() "/" INBOX', b'() "/" Sent', b'() "/" Trash']),
                           (await asyncio.wait_for(
                               self.loop.run_in_executor(None, functools.partial(imap_client.list, '""', '*')), 1)))
 
     async def test_append(self):
         imap_client = await self.login_user('user@mail', 'pass')
 
-        self.assertEquals(('OK', [b'0']), (await asyncio.wait_for(
+        self.assertEqual(('OK', [b'0']), (await asyncio.wait_for(
             self.loop.run_in_executor(None, functools.partial(imap_client.select, 'INBOX', readonly=True)), 2)))
 
         msg = Mail.create(['user@mail'], subject='append msg', content='do you see me ?')
-        self.assertEquals('OK', (await asyncio.wait_for(
+        self.assertEqual('OK', (await asyncio.wait_for(
                               self.loop.run_in_executor(None, functools.partial(
                                   imap_client.append, 'INBOX', 'FOO BAR', datetime.now(tz=utc), msg.as_bytes())), 2))[0])
 
-        self.assertEquals(('OK', [b'1']), (await asyncio.wait_for(
+        self.assertEqual(('OK', [b'1']), (await asyncio.wait_for(
             self.loop.run_in_executor(None, functools.partial(imap_client.select, 'INBOX', readonly=True)), 2)))
 
     async def test_logout(self):
@@ -433,7 +433,7 @@ class TestImapServerWithImaplib(WithImapServer, TestCase):
 
         self.assertEqual('BYE', result)  # uhh ?
         self.assertEqual([b'Logging out'], data)
-        self.assertEquals(imapserver.LOGOUT, self.imapserver.get_connection('user').state)
+        self.assertEqual(imapserver.LOGOUT, self.imapserver.get_connection('user').state)
 
     async def test_rfc5032_within(self):
         self.imapserver.receive(Mail.create(['user'], date=datetime.now(tz=utc) - timedelta(seconds=84600 * 3))) # 1
@@ -441,17 +441,17 @@ class TestImapServerWithImaplib(WithImapServer, TestCase):
         self.imapserver.receive(Mail.create(['user'])) # 3
         imap_client = await self.login_user('user', 'pass', select=True)
 
-        self.assertEquals([b'2 3'], (await asyncio.wait_for(
+        self.assertEqual([b'2 3'], (await asyncio.wait_for(
             self.loop.run_in_executor(None, functools.partial(imap_client.search, 'utf-8', 'YOUNGER', '84700')), 1))[1])
 
-        self.assertEquals([b'1'], (await asyncio.wait_for(
+        self.assertEqual([b'1'], (await asyncio.wait_for(
             self.loop.run_in_executor(None, functools.partial(imap_client.search, 'utf-8', 'OLDER', '84700')), 1))[1])
 
     async def test_getquotaroot(self):
         imap_client = await self.login_user('user', 'pass')
         self.imapserver.receive(Mail.create(['user']))
 
-        self.assertEquals(('OK', [[b'INBOX INBOX'], [b'INBOX (STORAGE 292 5000)']]),
+        self.assertEqual(('OK', [[b'INBOX INBOX'], [b'INBOX (STORAGE 292 5000)']]),
                           (await asyncio.wait_for(self.loop.run_in_executor(None,
                                                         functools.partial(imap_client.getquotaroot, 'INBOX')), 1)))
 
