@@ -42,6 +42,10 @@ class TestImapServerWithImaplib(WithImapServer, TestCase):
 
     def __init__(self, methodName='runTest'):
         super().__init__(methodName)
+        # FIXME - This modifies global interpreter state and
+        # prevents running specific tests with nose or
+        # running tests with modern test runners with pytest
+        # which do not call __init__ methods.
         add_charset('utf-8', SHORTEST, None, 'utf-8')
         add_charset('cp1252', SHORTEST, None, 'cp1252')
 
@@ -478,6 +482,10 @@ class TestSSLImapServerWithImaplib(WithImapServer, TestCase):
 
     def __init__(self, methodName='runTest'):
         super().__init__(methodName)
+        # FIXME - This modifies global interpreter state and
+        # prevents running specific tests with nose or
+        # running tests with modern test runners with pytest
+        # which do not call __init__ methods.
         add_charset('utf-8', SHORTEST, None, 'utf-8')
         add_charset('cp1252', SHORTEST, None, 'cp1252')
 
