@@ -16,7 +16,7 @@ with open(os.path.join(here, 'CHANGES.rst')) as changes:
 NAME = 'aioimaplib'
 
 tests_require = [
-    'nose',
+    'nose2',
     'asynctest',
     'mock',
     'pytz',
@@ -35,6 +35,7 @@ setup(
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
         "Topic :: Communications :: Email :: Post-Office :: IMAP",
         "Topic :: Internet" 
     ],
